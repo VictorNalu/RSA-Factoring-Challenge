@@ -29,11 +29,12 @@ def main(filename):
             elapsed_time = time.time() - start_time
 
             if p is not None and q is not None:
-                print(f"{number} = {p} * {q}")
+                print(f"{number}={p}*{q}")
             else:
                 print(f"Unable to find prime factors for {number}")
 
-            
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: prime_factors <file>")
