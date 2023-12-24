@@ -1,50 +1,46 @@
-#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
+#include <string.h>
 
-void factorize(int number) {
-    if (number < 0) {
-        printf("%d=%d*%d\n", number, number, 1);
-        return;
-    }
+int main(int argc, char *argv[])
+{
+	FILE *stream;
+	char *line = NULL;
+	size_t len = 0;
+	long long flag = 1, div, rest, number, counter;
+	ssize_t nread;
 
-    printf("%d=", number);
+	if (argc != 2) {
+		fprintf(stderr, "Usage: %s <file>\n", argv[0]);
+		exit(EXIT_FAILURE);
+	}
 
-    for (int i = 2; i <= number; ++i) {
-        while (number % i == 0) {
-            printf("%d", i);
-            number /= i;
-            if (number > 1) {
-                printf("*");
-            }
-        }
-    }
-    printf("\n");
-}
+	stream = fopen(argv[1], "r");
+	if (stream == NULL) {
+		perror("fopen");
+		exit(EXIT_FAILURE);
+	}
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <file>\n", argv[0]);
-        return 1;
-    }
+	while ((nread = getline(&line, &len, stream)) != -1) {
+		flag = 1, div = 2;
+		number = atoll(line);
+		while (flag) {
+			rest = number % div;
+			if (!rest) {
+				counter = number / div;
+				printf("%lld=%lld*%lld\n", number, counter, div);
+				flag = 0;
+			}
+			div++;
+		}
+	}
 
-    FILE *file = fopen(argv[1], "r");
-    if (file == NULL) {
-        perror("Error opening file");
-        return 1;
-    }
-
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-
-    while ((read = getline(&line, &len, file)) != -1) {
-        int number = atoi(line);
-        factorize(number);
-    }
-
-    free(line);
-    fclose(file);
-
-    return 0;
+	free(line);
+	fclose(stream);
+	exit(EXIT_SUCCESS);
 }
