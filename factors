@@ -6,7 +6,7 @@ import sys
 def factorize(n):
     for i in range(2, int(math.sqrt(n)) + 1):
         if n % i == 0:
-            return i, n // i
+            return max(i, n // i), min(i, n // i)
     return n, 1
 
 def main(filename):
