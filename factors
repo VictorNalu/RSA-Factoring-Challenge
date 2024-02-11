@@ -4,19 +4,21 @@ import sys
 import math
 import time
 
+
 def factorize_number(n):
     """Factorizes a number into two smaller numbers."""
     if n % 2 == 0:
         return n // 2, 2
-    
+
     for i in range(3, int(math.sqrt(n)) + 1, 2):
         if n % i == 0:
             return n // i, i
     return None, None
 
+
 def factorize_file(filename):
     """Factorizes numbers from a file."""
-    with open(filename, 'r') as file:
+    with open(filename, "r") as file:
         for line in file:
             num = int(line.strip())
             start_time = time.time()
@@ -27,6 +29,7 @@ def factorize_file(filename):
             if elapsed_time > 5:
                 print("Time limit exceeded for factorization of", num)
                 break
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
